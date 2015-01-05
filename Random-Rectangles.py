@@ -7,8 +7,8 @@ canvas = Canvas(tk, width=400, height=400)
 canvas.grid(row=0,column=1)
 
 Option = StringVar()
-Option.set("None")
-menu = OptionMenu(tk, Option,"None", "Colored Outlines", "Colored Fills")
+Option.set("Choose an Option")
+menu = OptionMenu(tk, Option,"Rectangles", "Rectangles- Colored Outlines", "Rectangles- Colored Fills")
 menu.grid(row=1,column=1)
 
 colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']
@@ -44,13 +44,13 @@ def Generate():
 	count = slider.get()
 	global option
 	canvas.delete("all")
-	if Option.get() == "None":
+	if Option.get() == "Rectangles":
 		for x in range(0,count):
 			random_rectangle(400, 400)
-	elif Option.get() == "Colored Outlines":
+	elif Option.get() == "Rectangles- Colored Outlines":
 		for x in range(0,count):
 			random_outline_rectangle(400,400)
-	elif Option.get() == "Colored Fills":
+	elif Option.get() == "Rectangles- Colored Fills":
 		for x in range(0,count):
 			random_color_rectangle(400,400)
 			
