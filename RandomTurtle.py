@@ -1,18 +1,9 @@
 import turtle
-import random
+import random  
 turtle.setup(500,500)
-randy = turtle.Pen()	
+randy = turtle.Pen()
 while True:
-	forward = random.randint(-100, 100)
-	randy.forward(forward)
-	turn = random.randint(-360, 360)
-	directions = ["right", "left"]
-	direction = random.choice(directions)
-	if direction == "right":
-		randy.right(turn)
-	elif direction == "left":
-		randy.left(turn)
-	posx = randy.xcor()
-	posy = randy.ycor()
-	if posx >= 250 or posx <= -250 or posy >= 250 or posy <= -250:
+	randy.forward(random.randint(-100, 100))
+	randy.setheading(random.randint(-360, 360))
+	if randy.xcor() >= 250 or randy.xcor() <= -250 or randy.ycor() >= 250 or randy.ycor() <= -250:
 		randy.goto(0, 0)
