@@ -1,5 +1,4 @@
-import turtle
-import random  
+import turtle, random
 turtle.setup(500,500)
 randy = turtle.Pen()
 while True:
