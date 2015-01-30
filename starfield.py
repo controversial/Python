@@ -1,3 +1,10 @@
+#By Luke Taylor
+#Uses Python 2.7
+#A test of embedding pygame windows in tkinter frames
+#A 3D Starfield program. Tested on Mac OS X Yosemite, Windows 7, and Raspbian (Linux)
+#Tests were completely successful on Windows and Linux.
+#On mac, the pygame window appeared separately from the tkinter window, leaving the tkinter frame blank. 
+
 import pygame
 import math
 import sys
