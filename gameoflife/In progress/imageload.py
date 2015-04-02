@@ -13,7 +13,7 @@ def printarray():
     for x in array:
         print x
 
-img = Image.open("Saved Images/smalltestjpg")
+img = Image.open("Saved Images/smalltest.jpg")
 if img.size[0] == img.size[1]:
     size = img.size[0]
 else:
