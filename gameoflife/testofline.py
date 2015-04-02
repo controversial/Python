@@ -1,6 +1,8 @@
-def line(x0, y0, x1, y1):
+def line(firstTuple, secondTuple):
         "Bresenham's line algorithm"
         points_in_line = []
+        x0, y0 = firstTuple
+        x1, y1 = secondTuple
         dx = abs(x1 - x0)
         dy = abs(y1 - y0)
         x, y = x0, y0
@@ -26,6 +28,7 @@ def line(x0, y0, x1, y1):
                 y += sy
         points_in_line.append((x, y))
         return points_in_line
+
 while 1:
     x1 = raw_input('x1?: ')
     y1 = raw_input('y1?: ')
@@ -34,6 +37,6 @@ while 1:
     
     x1, x2, y1, y2 = int(x1), int(x2), int(y1), int(y2)
     
-    print line(x1, y1, x2, y2)
+    print line((x1, y1), (x2, y2))
     print ''
     print ''
