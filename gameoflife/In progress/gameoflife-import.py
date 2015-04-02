@@ -1,5 +1,5 @@
 import random
-
+from PIL import Image
 import pygame
 
 
@@ -23,7 +23,7 @@ BACKGROUND = pygame.Color(44, 44, 44, 255)
 FOREGROUND = pygame.Color(86, 254, 184, 255)
 FPS = 30
 THE_SIZE = 100
-PIXEL_SIZE = 9
+PIXEL_SIZE = 7
 WINDOW_SIZE = THE_SIZE*PIXEL_SIZE
 #-------------------
 
@@ -33,6 +33,36 @@ def realToWorldCoordinates(inputtuple):
     x, y = inputtuple
     return (x // PIXEL_SIZE, y // PIXEL_SIZE)
 
+def pointsBetween(firstTuple, secondTuple):
+        "Bresenham's line algorithm"
+        points_in_line = []
+        x0, y0 = firstTuple 
+        x1, y1 = secondTuple
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+        x, y = x0, y0
+        sx = -1 if x0 > x1 else 1
+        sy = -1 if y0 > y1 else 1
+        if dx > dy:
+            err = dx / 2.0
+            while x != x1:
+                points_in_line.append((x, y))
+                err -= dy
+                if err < 0:
+                    y += sy
+                    err += dx
+                x += sx
+        else:
+            err = dy / 2.0
+            while y != y1:
+                points_in_line.append((x, y))
+                err -= dx
+                if err < 0:
+                    x += sx
+                    err += dy
+                y += sy
+        points_in_line.append((x, y))
+        return points_in_line
 
 def liveNeighbors(row, column):
     """Function to find number of live neighbors"""
@@ -69,7 +99,26 @@ def liveNeighbors(row, column):
     #Return the final count (0-8)
     return adjacents
 
-
+def load_image(imagename):
+    img = Image.open("Saved Images/" + imagename)
+    if img.size[0] == img.size[1] and img.size[0] == THE_SIZE:
+        array = [[(0, 0, 0) for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
+        pixels = img.load()
+        for x in range(THE_SIZE):
+            for y in range(THE_SIZE):
+                array[x][y] = pixels[x, y]
+        for x in range(THE_SIZE):
+            for y in range(THE_SIZE):
+                if array[x][y][0] >= 100 and array[x][y][1] >= 100 and array[x][y][2] >= 100:
+                    savedboard[x][y] = False
+                else:
+                    savedboard[x][y] = True
+        
+        
+    else:
+        print "Image is not compatible"
+    
+        
 def giveLife(ro, col):
     """Turn a space of the grid on"""
     rect = pygame.Rect(ro*PIXEL_SIZE, col*PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE)
@@ -87,6 +136,12 @@ def main():
     board = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
     global oldboard
     oldboard = [row[:] for row in board]
+    global generation
+    generation = 0
+    global savedboard
+    savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
+    load_image(raw_input("Image Name: "))
+    
 
     #Set up pygame
     pygame.init()
@@ -97,15 +152,13 @@ def main():
     pygame.display.update()
     clock = pygame.time.Clock()
 
-    generation = 0
-    savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
 
 
     #Main loop
     run = False
     while 1:
 
-        #Process Events            
+        #Process Events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -139,7 +192,7 @@ def main():
 
         #RULES
         if run:
-            tempboard = [[False for x in range(THE_SIZE)] for x in range(THE_SIZE)]
+            tempboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
             for r in range(len(board)):
                 for c in range(len(board)):
                     neighborcount = liveNeighbors(r, c)
@@ -156,14 +209,32 @@ def main():
             board = tempboard
             generation += 1
 
+        #Mouse Stuffs
         presses = pygame.mouse.get_pressed()
+        
+        if not presses[0] and not presses[2]:
+            putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
+
+        oldpos = (putx, puty)
+
         if presses[0]:
             putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
+            points = pointsBetween(oldpos, (putx, puty))
+            for point in points:
+                thex = point[0]
+                they = point[1]
+                board[thex][they] = True
             board[putx][puty] = True
             if not run:
                 generation = 0
+
         if presses[2]:
             putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
+            points = pointsBetween(oldpos, (putx, puty))
+            for point in points:
+                thex = point[0]
+                they = point[1]
+                board[thex][they] = False
             board[putx][puty] = False
             if not run:
                 generation = 0
@@ -186,4 +257,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

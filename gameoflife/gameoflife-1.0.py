@@ -23,7 +23,7 @@ BACKGROUND = pygame.Color(44, 44, 44, 255)
 FOREGROUND = pygame.Color(86, 254, 184, 255)
 FPS = 30
 THE_SIZE = 100
-PIXEL_SIZE = 9
+PIXEL_SIZE = 7
 WINDOW_SIZE = THE_SIZE*PIXEL_SIZE
 #-------------------
 
