@@ -129,7 +129,6 @@ def main():
 
     generation = 0
     savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
-    first = True
 
 
     #Main loop
@@ -188,15 +187,14 @@ def main():
             generation += 1
 
         #Mouse Stuffs
-        if first:
-            oldpos = realToWorldCoordinates(pygame.mouse.get_pos())
-        else:
-            oldpos = (putx, puty)
-
         presses = pygame.mouse.get_pressed()
         
+        if not presses[0] and not presses[2]:
+            putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
+
+        oldpos = (putx, puty)
+
         if presses[0]:
-            first = False
             putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
             points = pointsBetween(oldpos, (putx, puty))
             for point in points:
@@ -208,14 +206,13 @@ def main():
                 generation = 0
 
         if presses[2]:
-            first = False
             putx, puty = realToWorldCoordinates(pygame.mouse.get_pos())
             points = pointsBetween(oldpos, (putx, puty))
             for point in points:
                 thex = point[0]
                 they = point[1]
-                board[thex][they] = True
-            board[putx][puty] = True
+                board[thex][they] = False
+            board[putx][puty] = False
             if not run:
                 generation = 0
 
