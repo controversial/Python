@@ -140,7 +140,7 @@ def main():
     generation = 0
     global savedboard
     savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
-    load_image(raw_input("Image Name: "))
+    load_image("glidergun.jpg")
     
 
     #Set up pygame

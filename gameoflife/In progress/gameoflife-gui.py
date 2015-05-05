@@ -1,5 +1,9 @@
+import os
+import platform
 import random
+from Tkinter import *
 
+from PIL import Image, ImageTk
 import pygame
 
 
@@ -34,7 +38,7 @@ def realToWorldCoordinates(inputtuple):
     return (x // PIXEL_SIZE, y // PIXEL_SIZE)
 
 def pointsBetween(firstTuple, secondTuple):
-        """Bresenham's line algorithm"""
+        "Bresenham's line algorithm"
         points_in_line = []
         x0, y0 = firstTuple 
         x1, y1 = secondTuple
@@ -99,7 +103,26 @@ def liveNeighbors(row, column):
     #Return the final count (0-8)
     return adjacents
 
-
+def load_image(imagename):
+    img = Image.open("Saved Images/" + imagename)
+    if img.size[0] == img.size[1] and img.size[0] == THE_SIZE:
+        array = [[(0, 0, 0) for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
+        pixels = img.load()
+        for x in range(THE_SIZE):
+            for y in range(THE_SIZE):
+                array[x][y] = pixels[x, y]
+        for x in range(THE_SIZE):
+            for y in range(THE_SIZE):
+                if array[x][y][0] >= 100 and array[x][y][1] >= 100 and array[x][y][2] >= 100:
+                    savedboard[x][y] = False
+                else:
+                    savedboard[x][y] = True
+        
+        
+    else:
+        print "Image is not compatible"
+    
+        
 def giveLife(ro, col):
     """Turn a space of the grid on"""
     rect = pygame.Rect(ro*PIXEL_SIZE, col*PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE)
@@ -110,6 +133,55 @@ def killRuthlessly(ro, col):
     rect = pygame.Rect(ro*PIXEL_SIZE, col*PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE)
     pygame.draw.rect(surface, BACKGROUND, rect)
 
+def drawcmd():
+    print 'draw'
+
+def erasecmd():
+    print 'erase'
+
+def opencmd():
+    global fileselect
+    fileselect = Toplevel()
+
+    #Create the label about openable files
+    openlabel = Label(fileselect, text="Openable Patterns")
+    openlabel.pack(side=TOP)
+
+    scrollbar = Scrollbar(fileselect, )
+    scrollbar.pack(side=RIGHT, fill=Y)
+
+    global listbox
+    listbox = Listbox(fileselect, height=5, yscrollcommand=scrollbar.set)
+    listbox.pack(side=LEFT, fill=BOTH)
+
+    for item in images:
+        listbox.insert(END, item)
+    for x in range(20):
+        listbox.insert(END, str(x))
+
+    scrollbar.config(command=listbox.yview)
+def savefile():
+    print entry.get()
+
+def savecmd():
+    global savedialog
+    savedialog = Toplevel()
+    
+    savelabel = Label(savedialog, text="Save the current pattern as:")
+    savelabel.grid(row=0, column=0, columnspan=2)
+
+    global entry
+    entry = Entry(savedialog, width=15)
+    entry.grid(row=1, column=0, sticky=W)
+
+    savebutton = Button(savedialog, text='Save', command=savefile)
+    savebutton.grid(row=1, column=1)
+
+
+
+
+
+
 
 def main():
     #Define a 2D board (List containing lists)
@@ -117,6 +189,51 @@ def main():
     board = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
     global oldboard
     oldboard = [row[:] for row in board]
+    global generation
+    generation = 0
+    global savedboard
+    savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
+    load_image("glidergun.jpg")
+
+    #Set up Tkinter
+    tk = Tk()
+
+    #Load images
+    eraser_image = Image.open("Resources/Icons/eraser-white.png")
+    icon_eraser = ImageTk.PhotoImage(eraser_image)
+    open_image = Image.open("Resources/Icons/open-white.png")
+    icon_open = ImageTk.PhotoImage(open_image)
+    pencil_image = Image.open("Resources/Icons/pencil-white.png")
+    icon_pencil = ImageTk.PhotoImage(pencil_image)
+    save_image = Image.open("Resources/Icons/save-white.png")
+    icon_save = ImageTk.PhotoImage(save_image)
+
+    contents = os.listdir('Saved Images')
+    global images
+    images = []
+    for x in contents:
+        if x.endswith('.jpg'):
+            images.append(x)
+    images.sort()
+
+    #Create the frame in which the buttons are contained
+    frame = Frame(tk)
+    frame.grid(row=1, column=0)
+
+    #Create the tkinter buttons
+    pencilbutton = Button(tk, image=icon_pencil, width="60", height="60", command=drawcmd)
+    pencilbutton.grid(row=0, column=0)
+
+    eraserbutton = Button(tk, image=icon_eraser, width="60", height="60", command=erasecmd)
+    eraserbutton.grid(row=1, column=0)
+
+    openbutton = Button(tk, image=icon_open, width="60", height="60", command=opencmd)
+    openbutton.grid(row=2, column=0)
+
+    savebutton = Button(tk, image=icon_save, width="60", height="60", command=savecmd)
+    savebutton.grid(row=3, column=0)
+    
+    
 
     #Set up pygame
     pygame.init()
@@ -127,13 +244,12 @@ def main():
     pygame.display.update()
     clock = pygame.time.Clock()
 
-    generation = 0
-    savedboard = [[False for _ in range(THE_SIZE)] for _ in range(THE_SIZE)]
 
 
     #Main loop
     run = False
     while 1:
+        tk.update()
 
         #Process Events
         for event in pygame.event.get():
@@ -229,7 +345,7 @@ def main():
 
         oldboard = [row[:] for row in board]
 
-        pygame.display.flip()
+        pygame.display.update()
 
 
 if __name__ == '__main__':
