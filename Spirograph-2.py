@@ -31,16 +31,24 @@ def drawSpiral(arms, lenlist, velocitylist):
     run = 1
     while run:
         angle += 1
-        for n in range(1, arms+1):
-            print rotate((0, lenlist[n-1]), angle*velocitylist[n-1], pointlist[n-1])
         for n in range(arms):
+            point = tuple(map(sum,zip(rotate((0, lenlist[n]), angle*velocitylist[n], pointlist[n]))))
+            pointlist.append(point)
+            print pointlist
+        for n in range(len(pointlist)-1):
             lines.append(canvas.create_line(pointlist[n][0], pointlist[n][1], pointlist[n+1][1], pointlist[n+1][1]))
         tk.update()
-
+        for line in lines:
+            canvas.delete(line)
+        lines = []
+        pointlist = []
+        pointlist.append((0, 0))
 
 drawSpiral(2, [50, 75], [1, 5])
-#x, y = 0, 0
-#lines = []
+
+
+x, y = 0, 0
+lines = []
 
 while 1:
 
@@ -56,14 +64,16 @@ while 1:
 
     tk.update()
 
-    x += 12
+    x += 1
     if x > 360 and y > 360:
         x -= 360
         canvas.delete("all")
         time.sleep(1)
-    y += 1
+    y += 25
     if y > 360: y -= 360
 
     for line in lines:
         canvas.delete(line)
     lines = []
+    time.sleep(0.025)
+
