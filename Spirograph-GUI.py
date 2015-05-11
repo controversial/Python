@@ -6,8 +6,34 @@ import time
 tk = Tk()
 
 canvas = Canvas(tk, width=500, height=500)
-canvas.pack()
+canvas.pack(side=LEFT)
 canvas.configure(scrollregion=(-250, -250, 250, 250))
+
+frame = Frame(tk, bd=2, relief=GROOVE)
+frame.pack(side=LEFT)
+
+
+label1 = Label(frame, text="Angular Velocities")
+label1.grid(row=0, column=0, columnspan=2)
+
+scale1 = Scale(frame, from_=10, to=-10, resolution=0, label="1")
+scale1.grid(row=1, column=0)
+
+scale2 = Scale(frame, from_=10, to=-10, resolution=0, label="2")
+scale2.grid(row=1, column=1)
+
+spacer = LabelFrame(frame, height=20)
+spacer.grid(row=2, column=0)
+
+label2 = Label(frame, text="Arm Lengths")
+label2.grid(row=3, column=0, columnspan=2)
+
+scale3 = Scale(frame, from_=10, to=-10, resolution=0, label="1")
+scale3.grid(row=4, column=0)
+
+scale4 = Scale(frame, from_=10, to=-10, resolution=0, label="2")
+scale4.grid(row=4, column=1)
+
 
 def create_point(coords, canv=canvas):
     assert len(coords) == 2
@@ -47,6 +73,8 @@ def createSpiral(armOne, armTwo):
     iteration = 1
     inarow = 0
     while run:
+        scale1.set(step1)
+        scale2.set(step2)
         iteration += 1
 
         point1 = rotate((0,len1), x)
