@@ -9,34 +9,38 @@ tk = Tk()
 
 tk.configure(background='white')
 
-canvas = Canvas(tk, width=500, height=500)
-canvas.pack(side=LEFT)
+
+#Main Widgets
+Lframe = Frame(tk, bg="white")
+Lframe.grid(row=0, column=0)
+
+canvas = Canvas(tk, width=500, height=500, relief=SUNKEN)
+canvas.grid(row=0, column=1)
 canvas.configure(scrollregion=(-250, -250, 250, 250), bg="white")
 
-frame = Frame(tk, bd=2, relief=GROOVE, bg="white")
-frame.pack(side=LEFT)
+Rframe = Frame(tk, bg="white")
+Rframe.grid(row=0, column=2)
 
+Bframe = Frame(tk, bg="white")
+Bframe.grid(row=1, column=0, columnspan=3)
 
-label1 = Label(frame, text="Angular Velocities", bg="white")
+label1 = Label(Rframe, text="Angular Velocities", bg="white")
 label1.grid(row=0, column=0, columnspan=2)
 
-scale1 = Scale(frame, from_=10, to=-10, resolution=0.1, label="1", bg="white", length=150)
+scale1 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="1", bg="white", length=150)
 scale1.grid(row=1, column=0)
 
-scale2 = Scale(frame, from_=10, to=-10, resolution=0.1, label="2", bg="white", length=150)
+scale2 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="2", bg="white", length=150)
 scale2.grid(row=1, column=1)
 
-spacer = LabelFrame(frame, height=20, bg="white")
-spacer.grid(row=2, column=0)
+label2 = Label(Lframe, text="Arm Lengths", bg="white")
+label2.grid(row=0, column=0, columnspan=2)
 
-label2 = Label(frame, text="Arm Lengths", bg="white")
-label2.grid(row=3, column=0, columnspan=2)
+scale3 = Scale(Lframe, from_=100, to=0, resolution=1, label="1", bg="white", length=150)
+scale3.grid(row=1, column=0)
 
-scale3 = Scale(frame, from_=100, to=0, resolution=1, label="1", bg="white", length=150)
-scale3.grid(row=4, column=0)
-
-scale4 = Scale(frame, from_=100, to=0, resolution=1, label="2", bg="white", length=150)
-scale4.grid(row=4, column=1)
+scale4 = Scale(Lframe, from_=100, to=0, resolution=1, label="2", bg="white", length=150)
+scale4.grid(row=1, column=1)
 
 
 def create_point(coords, canv=canvas):
@@ -46,6 +50,11 @@ def create_point(coords, canv=canvas):
 def create_line(coords1, coords2, canv=canvas):
     line = canvas.create_line(coords1[0], coords1[1], coords2[1], coords2[1])
     return line
+def border():
+    canvas.create_line(-250, -250, -250, 250)
+    canvas.create_line(-250, -250, 250, -250)
+    canvas.create_line(249, 249, 249, -249)
+    canvas.create_line(249, 249, -249, 249)
 
 def rotate(point, angle, center=(0, 0)):
     counterangle = 360 - angle
@@ -131,15 +140,18 @@ def graph():
 
 def clear():
     canvas.delete("all")
+    border()
 
-button = Button(frame, text="Create Spiral", command=graph)
-button.grid(row=5, column=0, columnspan=2)
 
-clearbutton = Button(frame, text="Clear Drawing", command=clear)
-clearbutton.grid(row=6, column=0, columnspan=2)
+colorchooserbutton = Button(Bframe, text='Select Color', command=getColor)
+colorchooserbutton.pack(side=LEFT)
 
-colorchooserbutton = Button(frame, text='Select Color', command=getColor)
-colorchooserbutton.grid(row=7, column=0, columnspan = 2)
+button = Button(Bframe, text="Create Spiral", command=graph)
+button.pack(side=LEFT)
 
+clearbutton = Button(Bframe, text="Clear Drawing", command=clear)
+clearbutton.pack(side=LEFT)
+
+border()
 while 1:
     tk.update()
