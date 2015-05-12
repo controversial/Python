@@ -1,7 +1,7 @@
 #Spirograph.py
 from math import *
 from Tkinter import *
-from tkColorChooser import askcolor
+import tkColorChooser
 import time
 
 thecolor = "#000000"
@@ -11,35 +11,38 @@ tk.configure(background='white')
 
 
 #Main Widgets
-Lframe = Frame(tk, bg="white")
-Lframe.grid(row=0, column=0)
+Tlabel = Label(text="Spirograph", background="white")
+Tlabel.grid(row=0, column=0, columnspan=3)
 
-canvas = Canvas(tk, width=500, height=500, relief=SUNKEN)
-canvas.grid(row=0, column=1)
+Lframe = Frame(tk, bg="white")
+Lframe.grid(row=1, column=0)
+
+canvas = Canvas(tk, width=500, height=500, highlightthickness=0)
+canvas.grid(row=1, column=1)
 canvas.configure(scrollregion=(-250, -250, 250, 250), bg="white")
 
 Rframe = Frame(tk, bg="white")
-Rframe.grid(row=0, column=2)
+Rframe.grid(row=1, column=2)
 
 Bframe = Frame(tk, bg="white")
-Bframe.grid(row=1, column=0, columnspan=3)
+Bframe.grid(row=2, column=0, columnspan=3)
 
 label1 = Label(Rframe, text="Angular Velocities", bg="white")
 label1.grid(row=0, column=0, columnspan=2)
 
-scale1 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="1", bg="white", length=150)
+scale1 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="1", bg="white", length=150, highlightthickness=0)
 scale1.grid(row=1, column=0)
 
-scale2 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="2", bg="white", length=150)
+scale2 = Scale(Rframe, from_=10, to=-10, resolution=0.1, label="2", bg="white", length=150, highlightthickness=0)
 scale2.grid(row=1, column=1)
 
 label2 = Label(Lframe, text="Arm Lengths", bg="white")
 label2.grid(row=0, column=0, columnspan=2)
 
-scale3 = Scale(Lframe, from_=100, to=0, resolution=1, label="1", bg="white", length=150)
+scale3 = Scale(Lframe, from_=100, to=0, resolution=1, label="1", bg="white", length=150, highlightthickness=0)
 scale3.grid(row=1, column=0)
 
-scale4 = Scale(Lframe, from_=100, to=0, resolution=1, label="2", bg="white", length=150)
+scale4 = Scale(Lframe, from_=100, to=0, resolution=1, label="2", bg="white", length=150, highlightthickness=0)
 scale4.grid(row=1, column=1)
 
 
@@ -128,7 +131,7 @@ def createSpiral(armOne, armTwo, color):
 
 def getColor():
     global thecolor
-    thecolor = askcolor()[1]
+    thecolor = tkColorChooser.askcolor("black")[1]
     print thecolor
 
 def graph():
@@ -143,14 +146,14 @@ def clear():
     border()
 
 
-colorchooserbutton = Button(Bframe, text='Select Color', command=getColor)
-colorchooserbutton.pack(side=LEFT)
+colorchooserbutton = Button(Bframe, text='Select Color', command=getColor, bg="white")
+colorchooserbutton.pack(side=LEFT, padx=5)
 
-button = Button(Bframe, text="Create Spiral", command=graph)
-button.pack(side=LEFT)
+button = Button(Bframe, text="Create Spiral", command=graph, bg="white")
+button.pack(side=LEFT, padx=5)
 
-clearbutton = Button(Bframe, text="Clear Drawing", command=clear)
-clearbutton.pack(side=LEFT)
+clearbutton = Button(Bframe, text="Clear Drawing", command=clear, bg="white")
+clearbutton.pack(side=LEFT, padx=5)
 
 border()
 while 1:
