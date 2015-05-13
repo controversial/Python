@@ -8,7 +8,7 @@ thecolor = "#000000"
 tk = Tk()
 
 tk.configure(background='white')
-
+run = 0
 
 #Main Widgets
 Tlabel = Label(text="Spirograph", background="white")
@@ -74,9 +74,12 @@ def rotate(point, angle, center=(0, 0)):
 
 def createSpiral(armOne, armTwo, color):
 
+    clearbutton.config(text="Stop Drawing")
+
     x, y = 0, 0
     len1, step1 = armOne
     len2, step2 = armTwo
+    global lines
     lines = []
     previousPositions = []
 
@@ -84,7 +87,7 @@ def createSpiral(armOne, armTwo, color):
         step1 /= 2
         step2 /= 2
 
-
+    global run
     run = 1
     iteration = 1
     inarow = 0
@@ -128,6 +131,7 @@ def createSpiral(armOne, armTwo, color):
         lines = []
         time.sleep(0.005)
     print "Done!"
+    clearbutton.config(text="Clear Canvas")
 
 def getColor():
     global thecolor
@@ -145,6 +149,18 @@ def clear():
     canvas.delete("all")
     border()
 
+def STOPPIT():
+    global run, lines
+    run = 0
+    for line in lines:
+        canvas.delete(line)
+    lines = []
+
+def universalCommand():
+    if run:
+        STOPPIT()
+    else:
+        clear()
 
 colorchooserbutton = Button(Bframe, text='Select Color', command=getColor, bg="white")
 colorchooserbutton.pack(side=LEFT, padx=5)
@@ -152,7 +168,7 @@ colorchooserbutton.pack(side=LEFT, padx=5)
 button = Button(Bframe, text="Create Spiral", command=graph, bg="white")
 button.pack(side=LEFT, padx=5)
 
-clearbutton = Button(Bframe, text="Clear Drawing", command=clear, bg="white")
+clearbutton = Button(Bframe, text="Clear Drawing", command=universalCommand, bg="white")
 clearbutton.pack(side=LEFT, padx=5)
 
 border()
